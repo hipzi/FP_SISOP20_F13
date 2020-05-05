@@ -23,6 +23,7 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+//int chown(const char*, uid_t, gid_t);
 
 // ulib.c
 int stat(const char*, struct stat*);

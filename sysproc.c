@@ -89,3 +89,27 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+/*int*/
+/*sys_getuid(void)*/
+/*{*/
+/*  return myproc()->uid;*/
+/*}*/
+
+/*int*/
+/*sys_geteuid(void)*/
+/*{*/
+/*  return myproc()->euid;*/
+/*}*/
+
+/*int*/
+/*sys_getgid(void)*/
+/*{*/
+/*  return myproc()->gid;*/
+/*}*/
+
+/*int*/
+/*sys_getegid(void)*/
+/*{*/
+/*  return myproc()->egid;*/
+/*}*/

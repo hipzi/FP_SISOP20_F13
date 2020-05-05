@@ -15,6 +15,7 @@
 #include "sleeplock.h"
 #include "file.h"
 #include "fcntl.h"
+#include "errno.h"
 
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
@@ -243,6 +244,7 @@ create(char *path, short type, short major, short minor)
 {
   struct inode *ip, *dp;
   char name[DIRSIZ];
+/*  struct proc *curproc = myproc();*/
 
   if((dp = nameiparent(path, name)) == 0)
     return 0;
@@ -264,6 +266,8 @@ create(char *path, short type, short major, short minor)
   ip->major = major;
   ip->minor = minor;
   ip->nlink = 1;
+/*  ip->uid = curproc->euid;*/
+/*  ip->gid = curproc->egid;*/
   iupdate(ip);
 
   if(type == T_DIR){  // Create . and .. entries.
@@ -442,3 +446,42 @@ sys_pipe(void)
   fd[1] = fd1;
   return 0;
 }
+
+/*int*/
+/*sys_chown(void)*/
+/*{*/
+/*  char* path;*/
+/*  struct proc *curproc = myproc();*/
+
+/*  uid_t owner;*/
+/*  gid_t group;*/
+/*  if (argstr(0, &path) < 0 || argint(1, (int*)&owner) < 0 ||*/
+/*      argint(2, (int*)&group) < 0) {*/
+/*    return -EINVAL;*/
+/*  }*/
+/*  struct inode* ip = namei(path);*/
+/*  if (IS_ERR(ip)) {*/
+/*    return PTR_ERR(ip);*/
+/*  }*/
+/*  begin_op();*/
+/*  ilock(ip);*/
+/*  if (curproc->euid != 0) {*/
+/*    if ((ip->uid != curproc->euid) || (owner != (uid_t)-1 && owner != ip->uid) ||*/
+/*        (group != curproc->egid && !is_group_supplementary(group) &&*/
+/*         group != (uid_t)-1)) {*/
+/*      iunlockput(ip);*/
+/*      end_op();*/
+/*      return -EPERM;*/
+/*    }*/
+/*  }*/
+/*  if (owner != (uid_t)-1) ip->uid = owner;*/
+/*  if (group != (uid_t)-1) ip->gid = group;*/
+/*	//  if ((S_ISREG(ip->mode)) && proc->euid != 0 && (ip->mode & S_IXUGO)) {*/
+/*	    // Clear set-uid and set-gid bits, as POSIX requires us to.*/
+/*	//    ip->mode -= (ip->mode & (S_ISUID | S_ISGID));*/
+/*	//  }*/
+/*  iupdate(ip);*/
+/*  iunlockput(ip);*/
+/*  end_op();*/
+/*  return 0;*/
+/*}*/
