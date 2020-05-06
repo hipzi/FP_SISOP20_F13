@@ -231,6 +231,9 @@ iupdate(struct inode *ip)
   dip->nlink = ip->nlink;
   dip->size = ip->size;
   memmove(dip->addrs, ip->addrs, sizeof(ip->addrs));
+/*  dip->uid = ip->uid;*/
+/*  dip->gid = ip->gid;*/
+/*  dip->mode = ip->mode;*/
   log_write(bp);
   brelse(bp);
 }
@@ -305,6 +308,9 @@ ilock(struct inode *ip)
     ip->size = dip->size;
     memmove(ip->addrs, dip->addrs, sizeof(ip->addrs));
     brelse(bp);
+/*    ip->uid = dip->uid;*/
+/*    ip->gid = dip->gid;*/
+/*    ip->mode = dip->mode;*/
     ip->valid = 1;
     if(ip->type == 0)
       panic("ilock: no type");
@@ -443,7 +449,10 @@ stati(struct inode *ip, struct stat *st)
   st->ino = ip->inum;
   st->type = ip->type;
   st->nlink = ip->nlink;
-  st->size = ip->size;
+  st->size = ip->size; 
+/*  st->uid = ip->uid;*/
+/*  st->gid = ip->gid;*/
+/*  st->mode = ip->mode;*/
 }
 
 //PAGEBREAK!

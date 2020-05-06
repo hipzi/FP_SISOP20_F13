@@ -34,7 +34,13 @@ struct context {
 
 enum procstate { UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
-#define NGROUPS_MAX 16
+//struct fs_info_struct {
+//  struct inode* root;          // Current root directory
+//  struct inode* cwd;           // Current directory
+//  uint umask;                  // File mode creation mask
+//  uint users;
+// //kurang lock2
+//};
 
 // Per-process state
 struct proc {
@@ -50,15 +56,18 @@ struct proc {
   int killed;                  // If non-zero, have been killed
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
+  struct fs_info_struct* fs;   // Cwd, current root, umask
+  
 //  uid_t uid;                   // User ID
 //  uid_t euid;                  // Effective user ID
 //  uid_t suid;                  // Saved UID
 //  gid_t gid;                   // Group ID
 //  gid_t egid;                  // Effective group ID
 //  gid_t sgid;                  // Saved GID
+  
   char name[16];               // Process name (debugging)
 //  uint ngroups;
-//  gid_t groups[16];   // Supplementary groups that the current
+//  gid_t groups[16];	      // Supplementary groups that the current
 };
 
 // Process memory is laid out contiguously, low addresses first:
