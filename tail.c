@@ -2,8 +2,8 @@
 #include "stat.h"
 #include "user.h"
 
-char buf[1024]={'\\'};//Initialise buffer1
-char buf2[1024]={'\\'};//Initialise buffer2
+char buf[1024];
+char buf2[1024];
 
 void tail(int fd,char *name, int x)
 {
