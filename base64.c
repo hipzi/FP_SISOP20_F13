@@ -124,7 +124,7 @@ int main(int argc, char **argv) {
   close(file);
   exit();
  }
-  if(strcmp(argv[1][1],"d")==0){
+  if(argv[1][0] == '-' && argv[1][1] == 'd'){
 	if ((file = open(argv[2],O_RDONLY)) < 0){
         printf(1,"File %s tidak ada\n", argv[2]);
         close(file);
