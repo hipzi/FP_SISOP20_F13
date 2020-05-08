@@ -29,6 +29,7 @@ struct inode {
   uint size;
   uint addrs[NDIRECT+1];
   uint UID;
+  uint GID;
 
 //  uint uid;
 //  uint gid;

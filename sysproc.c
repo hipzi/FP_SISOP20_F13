@@ -61,6 +61,24 @@ sys_setuid(void)
 }
 
 int
+sys_getgid(void)
+{
+  return myproc()->gid;
+}
+
+int
+sys_setgid(void)
+{
+  uint gid;
+  argint(0, (int*)&gid);
+  if (myproc()->gid == 0) {
+    myproc()->gid = gid;
+    return 0;
+  }
+  return -1;
+}
+
+int
 sys_sbrk(void)
 {
   int addr;
@@ -107,27 +125,3 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
-
-/*int*/
-/*sys_getuid(void)*/
-/*{*/
-/*  return myproc()->uid;*/
-/*}*/
-
-/*int*/
-/*sys_geteuid(void)*/
-/*{*/
-/*  return myproc()->euid;*/
-/*}*/
-
-/*int*/
-/*sys_getgid(void)*/
-/*{*/
-/*  return myproc()->gid;*/
-/*}*/
-
-/*int*/
-/*sys_getegid(void)*/
-/*{*/
-/*  return myproc()->egid;*/
-/*}*/

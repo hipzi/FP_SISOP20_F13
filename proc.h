@@ -72,6 +72,7 @@ struct proc {
   
   char name[16];               // Process name (debugging)
   uint uid;
+  uint gid;
 //  uint ngroups;
 //  gid_t groups[16];	      // Supplementary groups that the current
 };

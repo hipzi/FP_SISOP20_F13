@@ -23,3 +23,5 @@
 #define SYS_chown  22
 #define SYS_getuid 23
 #define SYS_setuid 24
+#define SYS_getgid 25
+#define SYS_setgid 26

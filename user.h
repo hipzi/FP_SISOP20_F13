@@ -23,9 +23,12 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
-int chown(char*, uint);
+//int chown(char*, uint);
+int chown(char*, uint, uint);
 int getuid(void);
 int setuid(int);
+int getgid(void);
+int setgid(int);
 //int chown(char *pathname, int owner);
 //int chown(const char*, uid_t, gid_t);
 

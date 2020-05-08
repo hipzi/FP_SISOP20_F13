@@ -269,6 +269,7 @@ create(char *path, short type, short major, short minor)
   ip->minor = minor;
   ip->nlink = 1;
   ip->UID   = myproc()->uid;
+  ip->GID   = myproc()->gid;
 /*  ip->uid = curproc->euid;*/
 /*  ip->gid = curproc->egid;*/
 /*  ip->mode = (mode & (~(curproc->fs->umask)));*/
@@ -457,9 +458,10 @@ sys_chown(void)
 {
   char* path;
   int UID;
+  int GID;
   struct inode *ip;
 
-  if(argstr(0, &path) < 0 || argint(1, &UID) < 0){
+  if(argstr(0, &path) < 0 || argint(1, &UID) < 0 || argint(2, &GID) < 0){
     return -1;
   }
 
@@ -477,8 +479,17 @@ sys_chown(void)
     end_op();
     return y;    
   }
-
+  
   ip->UID = UID;
+
+  if(GID == -1){
+    int z = ip->GID;
+    iunlock(ip);
+    end_op();
+    return z;    
+  }
+
+  ip->GID = GID;
   iupdate(ip);
   iunlock(ip);
   end_op();
