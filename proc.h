@@ -58,6 +58,11 @@ struct proc {
   struct inode *cwd;           // Current directory
   struct fs_info_struct* fs;   // Cwd, current root, umask
   
+//  uint uid;                    // Process user id
+//  uint gid;                    // Process group id
+//  uint cpu_ticks_total;        // Total elapsed ticks in CPU
+//  uint cpu_ticks_in;           // Ticks when scheduled
+
 //  uid_t uid;                   // User ID
 //  uid_t euid;                  // Effective user ID
 //  uid_t suid;                  // Saved UID
@@ -66,6 +71,7 @@ struct proc {
 //  gid_t sgid;                  // Saved GID
   
   char name[16];               // Process name (debugging)
+  uint uid;
 //  uint ngroups;
 //  gid_t groups[16];	      // Supplementary groups that the current
 };

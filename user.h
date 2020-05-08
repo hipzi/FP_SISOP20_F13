@@ -23,6 +23,10 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+int chown(char*, uint);
+int getuid(void);
+int setuid(int);
+//int chown(char *pathname, int owner);
 //int chown(const char*, uid_t, gid_t);
 
 // ulib.c
@@ -38,3 +42,4 @@ void* memset(void*, int, uint);
 void* malloc(uint);
 void free(void*);
 int atoi(const char*);
+char* fgets(char*, int, int);

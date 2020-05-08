@@ -21,8 +21,14 @@ struct inode {
   short major;
   short minor;
   short nlink;
+
+//  ushort uid;         // owner ID
+//  ushort gid;         // group ID
+//  union mode_t mode;  // protection/mode bits
+
   uint size;
   uint addrs[NDIRECT+1];
+  uint UID;
 
 //  uint uid;
 //  uint gid;

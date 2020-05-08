@@ -204,6 +204,11 @@ ialloc(uint dev, short type)
     if(dip->type == 0){  // a free inode
       memset(dip, 0, sizeof(*dip));
       dip->type = type;
+
+/*      dip->uid = DEFAULT_UID;*/
+/*      dip->gid = DEFAULT_GID;*/
+/*      dip->mode.asInt = DEFAULT_MODE;*/
+
       log_write(bp);   // mark it allocated on the disk
       brelse(bp);
       return iget(dev, inum);
@@ -230,6 +235,11 @@ iupdate(struct inode *ip)
   dip->minor = ip->minor;
   dip->nlink = ip->nlink;
   dip->size = ip->size;
+
+/*  dip->uid = ip->uid;*/
+/*  dip->gid = ip->gid;*/
+/*  dip->mode.asInt = ip->mode.asInt;*/
+
   memmove(dip->addrs, ip->addrs, sizeof(ip->addrs));
 /*  dip->uid = ip->uid;*/
 /*  dip->gid = ip->gid;*/
@@ -306,6 +316,11 @@ ilock(struct inode *ip)
     ip->minor = dip->minor;
     ip->nlink = dip->nlink;
     ip->size = dip->size;
+
+/*    ip->uid = dip->uid;*/
+/*    ip->gid = dip->gid;*/
+/*    ip->mode = dip->mode;*/
+
     memmove(ip->addrs, dip->addrs, sizeof(ip->addrs));
     brelse(bp);
 /*    ip->uid = dip->uid;*/
@@ -450,8 +465,10 @@ stati(struct inode *ip, struct stat *st)
   st->type = ip->type;
   st->nlink = ip->nlink;
   st->size = ip->size; 
+
 /*  st->uid = ip->uid;*/
 /*  st->gid = ip->gid;*/
+/*  st->mode.asInt = ip->mode.asInt;*/
 /*  st->mode = ip->mode;*/
 }
 
@@ -677,3 +694,17 @@ nameiparent(char *path, char *name)
 {
   return namex(path, 1, name);
 }
+
+/*int*/
+/*chown(struct inode *ip, int owner)*/
+/*{*/
+/*  begin_op();*/
+/*  ilock(ip);*/
+/*  ip->uid = owner;*/
+/*  iunlock(ip);*/
+/*  iupdate(ip);*/
+/*  end_op();*/
+/*  return 0;*/
+/*}*/
+
+

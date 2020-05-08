@@ -4,19 +4,6 @@
 // user code, and calls into file.c and fs.c.
 //
 
-/*#include "types.h"*/
-/*#include "defs.h"*/
-/*#include "param.h"*/
-/*#include "stat.h"*/
-/*#include "mmu.h"*/
-/*#include "proc.h"*/
-/*#include "fs.h"*/
-/*#include "spinlock.h"*/
-/*#include "sleeplock.h"*/
-/*#include "file.h"*/
-/*#include "fcntl.h"*/
-/*#include "errno.h"*/
-
 #include "types.h"
 #include "defs.h"
 #include "param.h"
@@ -281,6 +268,7 @@ create(char *path, short type, short major, short minor)
   ip->major = major;
   ip->minor = minor;
   ip->nlink = 1;
+  ip->UID   = myproc()->uid;
 /*  ip->uid = curproc->euid;*/
 /*  ip->gid = curproc->egid;*/
 /*  ip->mode = (mode & (~(curproc->fs->umask)));*/
@@ -464,78 +452,36 @@ sys_pipe(void)
   return 0;
 }
 
-/*int*/
-/*sys_chown(void)*/
-/*{*/
-/*  char* path;*/
-/*  uid_t owner;*/
-/*  gid_t group;*/
+int
+sys_chown(void)
+{
+  char* path;
+  int UID;
+  struct inode *ip;
 
-/*  struct proc *curproc = myproc();*/
+  if(argstr(0, &path) < 0 || argint(1, &UID) < 0){
+    return -1;
+  }
 
-/*  if (argstr(0, &path) < 0 || argint(1, (int*)&owner) < 0 ||*/
-/*      argint(2, (int*)&group) < 0) {*/
-/*    return -EINVAL;*/
-/*  }*/
-/*  struct inode* ip = namei(path);*/
-/*  if (ip == 0) {*/
-/*    return -ENOENT;*/
-/*  }*/
-/*  begin_op();*/
-/*  ilock(ip);*/
-/*  if (curproc->euid != 0) {*/
-/*    if ((ip->uid != curproc->euid) || (owner != (uid_t)-1 && owner != ip->uid) ||*/
-/*        (group != curproc->egid && group != ip->gid && group != (uid_t)-1)) {*/
-/*      iunlockput(ip);*/
-/*      end_op();*/
-/*      return -EPERM;*/
-/*    }*/
-/*  }*/
-/*  if (owner != (uid_t)-1) ip->uid = owner;*/
-/*  if (group != (uid_t)-1) ip->gid = group;*/
-/*  if ((S_ISREG(ip->mode)) && curproc->euid != 0 && (ip->mode & S_IXUGO)) {*/
-/*    // Clear set-uid and set-gid bits, as POSIX requires us to.*/
-/*    ip->mode -= (ip->mode & (S_ISUID | S_ISGID));*/
-/*  }*/
-/*  iupdate(ip);*/
-/*  iunlockput(ip);*/
-/*  end_op();*/
-/*  return 0;*/
-/*}*/
-/*int*/
-/*sys_chown(void)*/
-/*{*/
-/*  char* path;*/
+  begin_op();
+  if((ip = namei(path)) == 0){
+    end_op();
+    return -2;
+  }
 
-/*  uid_t owner;*/
-/*  gid_t group;*/
-/*  if (argstr(0, &path) < 0 || argint(1, (int*)&owner) < 0 ||*/
-/*      argint(2, (int*)&group) < 0) {*/
-/*    return -EINVAL;*/
-/*  }*/
-/*  struct inode* ip = namei(path);*/
-/*  if (IS_ERR(ip)) {*/
-/*    return PTR_ERR(ip);*/
-/*  }*/
-/*  begin_op();*/
-/*  ilock(ip);*/
-/*  if (curproc->euid != 0) {*/
-/*    if ((ip->uid != curproc->euid) || (owner != (uid_t)-1 && owner != ip->uid) ||*/
-/*        (group != curproc->egid && !is_group_supplementary(group) &&*/
-/*         group != (uid_t)-1)) {*/
-/*      iunlockput(ip);*/
-/*      end_op();*/
-/*      return -EPERM;*/
-/*    }*/
-/*  }*/
-/*  if (owner != (uid_t)-1) ip->uid = owner;*/
-/*  if (group != (uid_t)-1) ip->gid = group;*/
-/*	//  if ((S_ISREG(ip->mode)) && proc->euid != 0 && (ip->mode & S_IXUGO)) {*/
-/*	    // Clear set-uid and set-gid bits, as POSIX requires us to.*/
-/*	//    ip->mode -= (ip->mode & (S_ISUID | S_ISGID));*/
-/*	//  }*/
-/*  iupdate(ip);*/
-/*  iunlockput(ip);*/
-/*  end_op();*/
-/*  return 0;*/
-/*}*/
+  ilock(ip);
+
+  if(UID == -1){
+    int y = ip->UID;
+    iunlock(ip);
+    end_op();
+    return y;    
+  }
+
+  ip->UID = UID;
+  iupdate(ip);
+  iunlock(ip);
+  end_op();
+  return 0;
+}
+

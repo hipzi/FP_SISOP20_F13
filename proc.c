@@ -139,6 +139,9 @@ userinit(void)
   p->tf->esp = PGSIZE;
   p->tf->eip = 0;  // beginning of initcode.S
 
+/*  p->uid = DEFAULT_UID;*/
+/*  p->uid = DEFAULT_GID;*/
+
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = namei("/");
 

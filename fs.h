@@ -4,6 +4,7 @@
 
 #define ROOTINO 1  // root i-number
 #define BSIZE 512  // block size
+//#define BSIZE 1024
 
 // Disk layout:
 // [ boot block | super block | log | inode blocks |
@@ -31,6 +32,11 @@ struct dinode {
   short major;          // Major device number (T_DEV only)
   short minor;          // Minor device number (T_DEV only)
   short nlink;          // Number of links to inode in file system
+
+//  ushort uid;              // owner ID
+//  ushort gid;              // group ID
+//  union mode_t mode;       // protection/mode bits
+
   uint size;            // Size of file (bytes)
   uint addrs[NDIRECT+1];   // Data block addresses
 //  uint uid;             // User ID
@@ -43,12 +49,14 @@ struct dinode {
 
 // Block containing inode i
 #define IBLOCK(i, sb)     ((i) / IPB + sb.inodestart)
+//#define IBLOCK(i, sb)     ((i) / IPB + 2)
 
 // Bitmap bits per block
 #define BPB           (BSIZE*8)
 
 // Block of free map containing bit for block b
 #define BBLOCK(b, sb) (b/BPB + sb.bmapstart)
+//#define BBLOCK(b, sb) (b/BPB + (sb)/IPB + 3)
 
 // Directory is a file containing a sequence of dirent structures.
 #define DIRSIZ 14
